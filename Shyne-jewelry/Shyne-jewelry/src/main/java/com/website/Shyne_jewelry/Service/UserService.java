@@ -10,7 +10,7 @@ AuthResponse registerUser(RegisterDTO dto);
 
 AuthResponse registerAdmin(RegisterDTO dto);
 
-AuthResponse login(LoginDTO dto);
+AuthResponse loginAdmin(LoginDTO dto);
 
 
 

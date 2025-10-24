@@ -50,10 +50,10 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login (@Valid @RequestBody LoginDTO loginDTO){
+    @PostMapping("/login/admin")
+    public ResponseEntity<?> loginAdmin (@Valid @RequestBody LoginDTO loginDTO){
         try{
-            AuthResponse authResponse = userService.login(loginDTO);
+            AuthResponse authResponse = userService.loginAdmin(loginDTO);
             return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Login successfully.", authResponse));
         }catch (RuntimeException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse(false, e.getMessage(), null));

@@ -50,7 +50,7 @@ public class DataInitializer implements CommandLineRunner {
             User admin = new User();
             admin.setName("System Admin");
             admin.setEmail(defaultAdminEmail);
-            admin.setPassword(passwordEncoder.encode("Om0ni$3E")); // Change this!
+            admin.setPassword(passwordEncoder.encode("Om0ni$3E"));
             admin.setCreatedAt(LocalDateTime.now());
 
             // Assign admin role
@@ -61,7 +61,6 @@ public class DataInitializer implements CommandLineRunner {
             userRepository.save(admin);
             System.out.println("✓ Created default admin user");
             System.out.println("  Email: " + defaultAdminEmail);
-            System.out.println("  Password: Admin@123 (CHANGE THIS IMMEDIATELY!)");
         }
     }
 }

@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    public AuthResponse login(LoginDTO dto){
+    public AuthResponse loginAdmin(LoginDTO dto){
         // Find user by email
         User user = userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
@@ -103,6 +103,15 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Invalid email or password");
         }
+
+        //Check if the user has ROLE_ADMIN
+        boolean isAdmin = user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+
+        if (!isAdmin) {
+            throw new BadCredentialsException("Access denied: Only admins can log in currently.");
+        }
+
         // Generate JWT token
         String jwt = tokenProvider.generateToken(user.getId());
 
