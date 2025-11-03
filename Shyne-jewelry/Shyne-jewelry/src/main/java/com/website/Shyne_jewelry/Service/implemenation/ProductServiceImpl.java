@@ -2,6 +2,7 @@ package com.website.Shyne_jewelry.Service.implemenation;
 
 import com.website.Shyne_jewelry.Repos.ProductRepository;
 import com.website.Shyne_jewelry.Service.ProductService;
+import com.website.Shyne_jewelry.dto.ProductsDTO;
 import com.website.Shyne_jewelry.entities.Products;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,23 +16,39 @@ public class ProductServiceImpl  implements ProductService {
     private ProductRepository productRepository;
 
 
-    @Override
-    public Products createProduct(Products products) {
-        return productRepository.save(products);
-    }
+//    @Override
+//    public Products createProduct(Products products) {
+//        return productRepository.save(products);
+//    }
 
     @Override
-    public Products updateProduct(Long id, Products products) {
+    public Products createProduct(ProductsDTO productsDTO) {
+        Products product = Products.builder()
+                .name(productsDTO.getName())
+                .description(productsDTO.getDescription())
+                .price(productsDTO.getPrice())
+                .stockQuantity(productsDTO.getStockQuantity())
+                .category(productsDTO.getCategory())
+                .imageUrl(productsDTO.getImageUrl())
+                .isAvailable(productsDTO.isAvailable())
+                .build();
+
+        return productRepository.save(product);
+    }
+
+
+    @Override
+    public Products updateProduct(Long id, ProductsDTO productsDTO) {
         Products existing = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        existing.setName(products.getName());
-        existing.setDescription(products.getDescription());
-        existing.setPrice(products.getPrice());
-        existing.setCategory(products.getCategory());
-        existing.setStockQuantity(products.getStockQuantity());
-        existing.setImageUrl(products.getImageUrl());
-        existing.setAvailable(products.isAvailable());
+        existing.setName(productsDTO.getName());
+        existing.setDescription(productsDTO.getDescription());
+        existing.setPrice(productsDTO.getPrice());
+        existing.setCategory(productsDTO.getCategory());
+        existing.setStockQuantity(productsDTO.getStockQuantity());
+        existing.setImageUrl(productsDTO.getImageUrl());
+        existing.setAvailable(productsDTO.isAvailable());
 
         return productRepository.save(existing);
     }

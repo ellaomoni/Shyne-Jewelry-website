@@ -12,40 +12,48 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+    public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public  SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter){
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    }
+        public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter){
+            this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        }
+
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
             http
                     .csrf(csrf -> csrf.disable())
                     .authorizeHttpRequests(auth -> auth
-                            .requestMatchers("/swagger-ui/**",
-                                    "/api/v1/auth/**","v3/api-docs/**","/swagger-resources/**",
-                                    "/", "api/**").permitAll()
-                            // Admin-only endpoints
-                            .requestMatchers("/api/v1/auth/register/admin").hasRole("ADMIN")
-                            .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                            .requestMatchers("/api/v1/auth/login/admin").hasRole("ADMIN")
-                            .requestMatchers("/api/v1/products/**").hasRole("ADMIN")
+                            // Public endpoints (no authentication needed)
+                            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**",
+                                    "/swagger-resources/**", "/").permitAll()
+                            .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register","/api/v1/cart/**").permitAll()
+
+                            // Products - GET is public, POST/PUT/DELETE require ADMIN
                             .requestMatchers(HttpMethod.GET, "/api/v1/products/**").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.PUT, "/api/v1/products/**").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/products/**").hasRole("ADMIN")
 
+                            // Admin endpoints
+                            .requestMatchers("/api/v1/auth/register/admin").hasRole("ADMIN")
+                            .requestMatchers("/api/v1/auth/login/admin").hasRole("ADMIN")
+                            .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
 
+                            // Everything else requires authentication
                             .anyRequest().authenticated()
-
+                    )
+                    .sessionManagement(session -> session
+                            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     )
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-
             return http.build();
         }
-
 
         // Encrypt Password from plain text in database.
         @Bean

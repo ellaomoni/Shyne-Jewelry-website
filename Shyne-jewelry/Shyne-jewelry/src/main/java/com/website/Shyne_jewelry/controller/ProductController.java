@@ -2,10 +2,12 @@ package com.website.Shyne_jewelry.controller;
 
 
 import com.website.Shyne_jewelry.Service.ProductService;
+import com.website.Shyne_jewelry.dto.ProductsDTO;
 import com.website.Shyne_jewelry.entities.Products;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,16 +20,16 @@ public class ProductController {
 
     // ✅ Create (Admin only)
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
-    public Products createProducts (@RequestBody Products products) {
-        return productService.createProduct(products);
+    @PostMapping("/create")
+    public Products createProducts (@RequestBody ProductsDTO productsDTO) {
+        return productService.createProduct(productsDTO);
     }
 
     // ✅ Update (Admin only)
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public Products updateProducts(@PathVariable Long id, @RequestBody Products products) {
-        return productService.updateProduct(id, products);
+    public Products updateProducts(@PathVariable Long id, @RequestBody ProductsDTO productsDTO) {
+        return productService.updateProduct(id, productsDTO);
     }
 
     // ✅ Delete (Admin only)
@@ -45,10 +47,11 @@ public class ProductController {
         return productService.getAllProducts(PageRequest.of(page, size));
     }
 
-    // ✅ View single product (Public)
+    //  View single product (Public)
     @GetMapping("/{id}")
-    public Products getProductsById(@PathVariable Long id) {
-        return  getProductsById(id);
+    public ResponseEntity<Products> getProductsById(@PathVariable Long id) {
+        Products products = productService.getProductsById(id);
+        return ResponseEntity.ok(products);
     }
 
 
