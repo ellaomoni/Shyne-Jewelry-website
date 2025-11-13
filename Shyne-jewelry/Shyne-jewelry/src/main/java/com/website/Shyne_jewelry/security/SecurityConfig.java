@@ -31,7 +31,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
                             // Public endpoints (no authentication needed)
                             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**",
                                     "/swagger-resources/**", "/").permitAll()
-                            .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register","/api/v1/cart/**","/api/v1/orders/**").permitAll()
+                            .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register","/api/v1/cart/**","/api/v1/orders/**","/api/v1/payments/**").permitAll()
 
 
                             // Products - GET is public, POST/PUT/DELETE require ADMIN
