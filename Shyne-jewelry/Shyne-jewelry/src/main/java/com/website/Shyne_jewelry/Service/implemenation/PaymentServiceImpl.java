@@ -2,7 +2,9 @@ package com.website.Shyne_jewelry.Service.implemenation;
 
 import com.website.Shyne_jewelry.Repos.TransactionRepository;
 import com.website.Shyne_jewelry.Service.PaymentService;
+import com.website.Shyne_jewelry.dto.PaymentInitResponseDTO;
 import com.website.Shyne_jewelry.entities.Transaction;
+import io.jsonwebtoken.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    public String initializePayment(String email, Double amount, String sessionId) {
+    public PaymentInitResponseDTO initializePayment(String email, Double amount, String sessionId) throws IOException {
         String url = "https://api.paystack.co/transaction/initialize";
 
         HttpHeaders headers = new HttpHeaders();

@@ -2,6 +2,7 @@ package com.website.Shyne_jewelry.controller;
 
 
 import com.website.Shyne_jewelry.Service.OrderService;
+import com.website.Shyne_jewelry.Service.PaymentService;
 import com.website.Shyne_jewelry.entities.Order;
 import com.website.Shyne_jewelry.enums.OrderStatus;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 
 public class OrderController {
     private final OrderService orderService;
+    private final PaymentService paymentService;
 
     @PostMapping("/checkout")
     public ResponseEntity<Order> checkout(@RequestParam String sessionId) {
